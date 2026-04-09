@@ -1,13 +1,3 @@
 /node_modules
 /dist
 /tsconfig.json
-
-
-
-git add .
-
-GIT_AUTHOR_DATE="2026-04-09 12:00:00" \
-GIT_COMMITTER_DATE="2026-04-09 12:00:00" \
-git commit -m "chore(structure): initialize modular architecture (auth, messages, posts) with base files"
-
-git push

@@ -2,6 +2,7 @@ import express from 'express';
 import type {Express , Request , Response} from 'express';
 import cors from 'cors';
 import { authRouter } from './modules';
+import { globalErrorHandler } from './middleware/error.middleware';
 let origin = "http://localhost:3000";
 let allowedOrigins = [...origin];
 
@@ -23,6 +24,7 @@ export const boostrap = (): void=>{
         res.json({message: 'hello from social media app'});
     })
     app.use('{*dummy}', (req,res)=> res.status(404).json('Page Not Found'));
+    app.use(globalErrorHandler);
     app.listen(3000, ()=> console.log(`server is running on port 3000`));
 }
 

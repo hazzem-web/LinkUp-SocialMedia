@@ -1,10 +1,11 @@
-import { LoginDTO, SignUpDTO } from "./auth.DTO";
+import { ApplicationError } from "../../common/exceptions/application.exception";
+import { LoginDTO, SignUpDTO } from "./auth.dto";
 
 class AuthService{
     constructor(){}
 
     login(data: LoginDTO) : LoginDTO {
-        console.log(data , " from class");
+        throw new ApplicationError ("method not implemented" , 400)
         return data;
     }
 

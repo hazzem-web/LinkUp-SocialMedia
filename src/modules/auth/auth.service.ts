@@ -5,7 +5,6 @@ class AuthService{
     constructor(){}
 
     login(data: LoginDTO) : LoginDTO {
-        throw new ApplicationError ("method not implemented" , 400)
         return data;
     }
 

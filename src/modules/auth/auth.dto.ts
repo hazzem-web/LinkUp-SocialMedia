@@ -1,10 +1,7 @@
-export interface LoginDTO {
-    email: string,
-    password: string
-}
+import { z } from 'zod';
+import { LoginSchema, SignUpSchema } from './auth.validation';
 
 
+export type SignUpDTO = z.infer<typeof SignUpSchema.body>;
 
-export interface SignUpDTO extends LoginDTO { 
-    name: string
-}
+export type LoginDTO = z.infer<typeof LoginSchema.body>;

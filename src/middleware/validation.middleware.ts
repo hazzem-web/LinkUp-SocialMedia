@@ -14,7 +14,7 @@ export const valiation = (Schema: ValidationSchema)=>{
                 continue;
             }
             const value = Schema[key].safeParse(req[key]);
-            
+
             if (!value.success) { 
                 validationError.push({key , issue: value.error.issues});
             }

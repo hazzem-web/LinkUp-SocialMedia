@@ -5,10 +5,11 @@ import { authRouter } from './modules';
 import { globalErrorHandler } from './middleware/error.middleware';
 
 import { env } from './config/env.service';
-let origin = "http://localhost:3000";
+import { databaseConnection } from './database/connection';
+let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
-export const boostrap = (): void=>{
+export const boostrap = async(){
     const app: Express = express();
     app.use(express.json());
     app.use(express.urlencoded({extended: false}))
@@ -21,6 +22,7 @@ export const boostrap = (): void=>{
         },
         credentials: true   
     }));
+    await databaseConnection();
     app.use('/auth', authRouter);
     app.get('/',(req:Request,res:Response)=>{
         res.json({message: 'hello from social media app'});

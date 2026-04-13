@@ -3,6 +3,8 @@ import type {Express , Request , Response} from 'express';
 import cors from 'cors';
 import { authRouter } from './modules';
 import { globalErrorHandler } from './middleware/error.middleware';
+
+import { env } from './config/env.service';
 let origin = "http://localhost:3000";
 let allowedOrigins = [...origin];
 
@@ -25,7 +27,7 @@ export const boostrap = (): void=>{
     })
     app.use('{*dummy}', (req,res)=> res.status(404).json('Page Not Found'));
     app.use(globalErrorHandler);
-    app.listen(3000, ()=> console.log(`server is running on port 3000`));
+    app.listen(env.Port, ()=> console.log(`server is running on port ${env.Port}`));
 }
 
 

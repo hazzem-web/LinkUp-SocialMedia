@@ -1,4 +1,3 @@
-import { ApplicationError } from "../../common/exceptions/application.exception";
 import { LoginDTO, SignUpDTO } from "./auth.dto";
 
 class AuthService{

@@ -1,8 +1,11 @@
 import express from 'express';
 import type {Express , Request , Response} from 'express';
 import cors from 'cors';
-import { authRouter } from './modules';
-import { globalErrorHandler } from './middleware/error.middleware';
+import { authRouter } from './modules/auth/index';
+import { userRouter } from './modules/users/index';
+import { messageRouter } from './modules/messages/index';
+import { postRouter } from './modules/posts/index'; 
+import { globalErrorHandler } from './middleware/index';
 
 import { env } from './config/env.service';
 import { databaseConnection } from './database/connection';
@@ -23,12 +26,18 @@ export const boostrap = async(){
         credentials: true   
     }));
     await databaseConnection();
+
     app.use('/auth', authRouter);
+    app.use('/users', userRouter);
+    app.use('/messages', messageRouter);
+    app.use('/posts', postRouter);
+
     app.get('/',(req:Request,res:Response)=>{
         res.json({message: 'hello from social media app'});
     })
     app.use('{*dummy}', (req,res)=> res.status(404).json('Page Not Found'));
     app.use(globalErrorHandler);
+    
     app.listen(env.Port, ()=> console.log(`server is running on port ${env.Port}`));
 }
 

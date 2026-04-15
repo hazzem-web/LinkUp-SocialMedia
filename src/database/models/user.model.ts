@@ -4,6 +4,12 @@ import { GenderEnum, ProviderEnum, RoleEnum } from "../../common/enums/index";
 
 
 const userSchema = new mongoose.Schema<IUser>({
+<<<<<<< HEAD
+=======
+    userName: {
+        type: String
+    },
+>>>>>>> 4cd8806d43cae519a6537e0e5e67154204f99013
     firstName: {
         type: String,
         required: true,

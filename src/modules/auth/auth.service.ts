@@ -1,14 +1,20 @@
-import { ApplicationError } from "../../common/exceptions/application.exception";
 import { LoginDTO, SignUpDTO } from "./auth.dto";
+import { IUser } from "../../common/interfaces/index";
+import  { userModel }  from "../../database/models/index";
+import { Model } from "mongoose";
 
 class AuthService{
-    constructor(){}
-
-    login(data: LoginDTO) : LoginDTO {
-        return data;
+    private userModel : Model<IUser>
+    constructor(){
+        this.userModel = userModel;
     }
 
-    signup(data: SignUpDTO) : SignUpDTO {
+    async signup(data: SignUpDTO) : Promise<any> {
+        let result = await userModel.create(data);
+        return result;
+    }
+
+    login(data: LoginDTO) : LoginDTO {
         return data;
     }
 }

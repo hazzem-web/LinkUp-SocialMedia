@@ -12,7 +12,7 @@ import { databaseConnection } from './database/connection';
 let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
-export const boostrap = async(){
+export const boostrap = async()=>{
     const app: Express = express();
     app.use(express.json());
     app.use(express.urlencoded({extended: false}))

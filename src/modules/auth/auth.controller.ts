@@ -11,7 +11,7 @@ const router: Router = Router()
 
 
 router.post('/signup', valiation(SignUpSchema) , async(req: Request,res: Response)=>{
-    const data = AuthService.signup(req.body);
+    const data = await AuthService.signup(req.body);
     return SuccessResponse({res, message: "user signup successfully", status:201, data});
 })
 

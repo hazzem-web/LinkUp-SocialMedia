@@ -16,7 +16,7 @@ router.post('/signup', valiation(SignUpSchema) , async(req: Request,res: Respons
 })
 
 router.post('/login', valiation(LoginSchema) , async(req: Request,res: Response)=>{
-    let data = AuthService.login(req.body);
+    const data = await AuthService.login(req.body);
     return SuccessResponse({res, message: "user login successfully", status:200, data}); 
 })
 

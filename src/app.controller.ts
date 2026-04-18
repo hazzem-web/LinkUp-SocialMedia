@@ -9,6 +9,7 @@ import { globalErrorHandler } from './middleware/index';
 
 import { env } from './config/env.service';
 import { databaseConnection } from './database/connection';
+import { redisService } from './common/services/redis.service';
 let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
@@ -26,7 +27,7 @@ export const boostrap = async()=>{
         credentials: true   
     }));
     await databaseConnection();
-
+    redisService.connect();
     app.use('/auth', authRouter);
     app.use('/users', userRouter);
     app.use('/messages', messageRouter);

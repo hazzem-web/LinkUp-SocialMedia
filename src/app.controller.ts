@@ -10,6 +10,7 @@ import { globalErrorHandler } from './middleware/index';
 import { env } from './config/env.service';
 import { databaseConnection } from './database/connection';
 import { redisService } from './common/services/redis.service';
+import { userModel } from './database/models';
 let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
@@ -28,6 +29,15 @@ export const boostrap = async()=>{
     }));
     await databaseConnection();
     redisService.connect();
+    let user = await userModel.create({
+        firstName: "Hazzem",
+        lastName: "Mohammed",
+        email: "hazzem....11@gmail.com",
+        password: "37533gjoH#"
+    })
+
+    user.firstName = "Zoma";
+    await user.save();
     app.use('/auth', authRouter);
     app.use('/users', userRouter);
     app.use('/messages', messageRouter);

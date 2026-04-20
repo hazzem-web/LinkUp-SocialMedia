@@ -28,6 +28,7 @@ export const boostrap = async()=>{
         credentials: true   
     }));
     await databaseConnection();
+    
     redisService.connect();
     let user = await userModel.create({
         firstName: "Hazzem",

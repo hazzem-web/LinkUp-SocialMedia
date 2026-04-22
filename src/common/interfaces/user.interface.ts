@@ -14,5 +14,5 @@ export interface IUser  {
     provider?: ProviderEnum,
     twoFA: boolean,
     createdAt?: Date,
-    updatedAt?: Date
+    updatedAt?: Date,
 }

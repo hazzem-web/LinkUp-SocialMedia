@@ -30,15 +30,6 @@ export const boostrap = async()=>{
     await databaseConnection();
     
     redisService.connect();
-    let user = await userModel.create({
-        firstName: "Hazzem",
-        lastName: "Mohammed",
-        email: "hazzem....11@gmail.com",
-        password: "37533gjoH#"
-    })
-
-    user.firstName = "Zoma";
-    await user.save();
     app.use('/auth', authRouter);
     app.use('/users', userRouter);
     app.use('/messages', messageRouter);

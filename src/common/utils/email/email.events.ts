@@ -19,19 +19,16 @@ const redisKey = (type: string, identifier: Types.ObjectId | string ): string =>
 };
 
 event.on("verifyEmail", async(data: HydratedDocument<IUser>)=>{
-    let {_id , email , userName} = data;            
-    let code = createOTP();
-    await redisService.set({
-        key: redisKey("OTP",_id),
-        value: await generateHash({plainText:code}),
-        ttl: 5 * 60 // 5 minutes
-    })
+
+})
+
+
+event.on("Login", async(data:HydratedDocument<IUser>)=>{
+    let { email , firstName} = data;   
     await sendEmail({
         to: email,
-        subject: "user registerd successfully please verify your email" ,
-        html: `<h1>Hello: ${userName}</h1>
-            <p> your otp is: ${code} </p>
-            <p>Note: this otp is valid for 5 minutes</p>
+        subject: "user login successfully" ,
+        html: `<h1>Welcome Back ${firstName}: you are logged in successfully</h1>
         `
     });
 })

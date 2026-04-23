@@ -5,6 +5,7 @@ export interface IUser  {
     firstName: string,
     lastName: string,
     email: string,
+    confirmEmail:boolean,
     phone: string,
     profilePic?: string,
     profileCoverPic?: string[],
@@ -14,5 +15,5 @@ export interface IUser  {
     provider?: ProviderEnum,
     twoFA: boolean,
     createdAt?: Date,
-    updatedAt?: Date,
+    updatedAt?: Date
 }

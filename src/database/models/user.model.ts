@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema<IUser>({
         required: true,
         unique: true
     },
+    confirmEmail: {
+        type: Boolean,
+        default: false
+    },
     phone: {
         type: String
     },

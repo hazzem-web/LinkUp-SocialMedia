@@ -10,7 +10,7 @@ import { globalErrorHandler } from './middleware/index';
 import { env } from './config/env.service';
 import { databaseConnection } from './database/connection';
 import { redisService } from './common/services/redis.service';
-import { userModel } from './database/models';
+import { Server } from 'socket.io';
 let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
@@ -41,8 +41,14 @@ export const boostrap = async()=>{
     app.use('{*dummy}', (req,res)=> res.status(404).json('Page Not Found'));
     app.use(globalErrorHandler);
     
-    app.listen(env.Port, ()=> console.log(`server is running on port ${env.Port}`));
+    const httpServer = app.listen(env.Port, ()=> console.log(`server is running on port ${env.Port}`));
+
+    const io = new Server(httpServer);
+
+    io.on("connection", (socket)=>{
+        console.log(socket.id);
+        socket.on("sayHi",()=>{
+            console.log("Hello");
+        })
+    })
 }
-
-
-

@@ -129,8 +129,8 @@ export class DatabaseRepository<TRawDocs> {
     async findByIdAndUpdate(
         id: Types.ObjectId | string,
         update: UpdateQuery<TRawDocs>,
-        select?: string | Record<string, 0 | 1>,
-        options?: QueryOptions
+        options?: QueryOptions,
+        select?: string | Record<string, 0 | 1>
     ){
         this.IdValidation(id);
         let doc = this.model.findByIdAndUpdate(id,update,{...options , returnDocument:'after'});

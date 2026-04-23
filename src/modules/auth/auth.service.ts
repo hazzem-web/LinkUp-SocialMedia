@@ -1,7 +1,7 @@
 import { LoginDTO, SignUpDTO } from "./auth.dto";
 import { IUser } from "../../common/interfaces/index";
 import  { userModel }  from "../../database/models/index";
-import { HydratedDocument, Model } from "mongoose";
+import { HydratedDocument, Model, Types } from "mongoose";
 import { BadRequestException, conflictException, NotFoundException, UnAuthorizedException } from "../../common/exceptions";
 import { DatabaseRepository } from './../../database/repository/base.repository';
 import { SecurityService } from './../../common/services/security.service';
@@ -60,19 +60,21 @@ class AuthService{
         throw new BadRequestException('user is already verified');
     }
     
-    let redisCode = await this.redisService.get(redisKey("OTP",user));
+    let redisCode = await this.redisService.get(`OTP::${user?._id}`);
 
-    let compared = await this.SecurityService.compareHash(code, redisCode);
+    if (!redisCode) {
+        throw new UnAuthorizedException('OTP expired or not found');
+    }
+    let compared = await this.SecurityService.compareHash({plainText:code, cypherText:redisCode});
     if (!compared) { 
         throw new UnAuthorizedException('Incorrect OTP')
     }
 
-    user = await this.userRepository.findOneAndUpdate({
-        model: userModel,
-        filter: {_id: user._id},
-        update: {isVerified: true},
-        options: {returnDocument: 'after'}
-    })
+    user = await this.userRepository.findByIdAndUpdate(
+        user?._id as Types.ObjectId,
+        {confirmEmail: true},
+        {returnDocument: 'after'}
+    )
 
 
     if (!user) { 

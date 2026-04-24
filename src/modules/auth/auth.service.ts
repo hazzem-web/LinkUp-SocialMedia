@@ -53,7 +53,7 @@ class AuthService{
         email
     })
     if (!user) { 
-        
+        throw new NotFoundException("user not found");
     }
 
     if(user?.confirmEmail) { 

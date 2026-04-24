@@ -25,7 +25,7 @@ export const boostrap = async()=>{
             }
             return callback(new Error("this origin is not allowed to send request (unauthorized)"))
         },
-        credentials: true   
+        credentials: true
     }));
     await databaseConnection();
     
@@ -44,7 +44,6 @@ export const boostrap = async()=>{
     const httpServer = app.listen(env.Port, ()=> console.log(`server is running on port ${env.Port}`));
 
     const io = new Server(httpServer);
-
     io.on("connection", (socket)=>{
         console.log(socket.id);
         socket.on("sayHi",()=>{

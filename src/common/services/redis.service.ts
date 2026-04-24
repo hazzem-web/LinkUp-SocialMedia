@@ -1,7 +1,6 @@
 import { createClient, RedisArgument, RedisClientType } from "redis";
 import { env } from "../../config/env.service";
 import { Types } from "mongoose";
-import { databaseConnection } from "../../database/connection";
 import { NotFoundException } from "../exceptions";
 
 export class RedisService {

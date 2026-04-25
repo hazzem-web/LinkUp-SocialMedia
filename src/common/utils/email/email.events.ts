@@ -1,9 +1,10 @@
 import { EventEmitter } from "events";
 import { generateHash } from "../security/index";
-import { redisService } from "../../services/index";
+import { redisService, SecurityService } from "../../services/index";
 import { sendEmail } from "./sendEmail";
 import { IUser } from './../../interfaces/user.interface';
 import { HydratedDocument, Types } from 'mongoose';
+
 
 
 export let event = new EventEmitter();

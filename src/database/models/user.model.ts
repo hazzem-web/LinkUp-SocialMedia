@@ -75,24 +75,4 @@ userSchema.virtual('userName').set(function (value){
 
 
 
-userSchema.pre("validate", function(){
-    console.log("pre validate");
-})
-
-
-userSchema.pre("validate", function(){
-    console.log("post validate");
-})
-
-
-userSchema.pre("save", function(){
-    console.log(this);
-    console.log("pre save");
-})
-
-userSchema.post("save", function(){
-    console.log(this);
-    console.log("post save");
-})
-
 export const userModel = mongoose.model<IUser>('users', userSchema);

@@ -6,18 +6,16 @@ import { BadRequestException, conflictException, NotFoundException, UnAuthorized
 import { DatabaseRepository } from './../../database/repository/base.repository';
 import { SecurityService } from './../../common/services/security.service';
 import { createOTP, event , sendEmail } from "../../common/utils/email/index";
-import { RedisService } from "../../common/services";
+import { redisService } from "../../common/services";
 
 class AuthService{
     private userModel : Model<IUser>;
     private userRepository: DatabaseRepository<IUser>
     private SecurityService: SecurityService
-    private redisService: RedisService
     constructor(){
         this.userModel = userModel;
         this.userRepository = new DatabaseRepository(this.userModel);
         this.SecurityService = new SecurityService;
-        this.redisService = new RedisService;
     }
 
     async signup(data: SignUpDTO) : Promise<IUser> {
@@ -32,7 +30,7 @@ class AuthService{
          
         let code = createOTP();
         let hashedOTP = await this.SecurityService.generateHash({plainText:code})
-        await this.redisService.set({
+        await redisService.set({
             key: `OTP::${userData._id}`,
             value: hashedOTP,
             ttl: 5 * 60 // 5 minutes
@@ -60,7 +58,7 @@ class AuthService{
         throw new BadRequestException('user is already verified');
     }
     
-    let redisCode = await this.redisService.get(`OTP::${user?._id}`);
+    let redisCode = await redisService.get(`OTP::${user?._id}`);
 
     if (!redisCode) {
         throw new UnAuthorizedException('OTP expired or not found');

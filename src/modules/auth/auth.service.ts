@@ -7,15 +7,18 @@ import { DatabaseRepository } from './../../database/repository/base.repository'
 import { SecurityService } from './../../common/services/security.service';
 import { createOTP, event , sendEmail } from "../../common/utils/email/index";
 import { redisService } from "../../common/services";
+import { RedisService } from './../../common/services/redis.service';
 
 class AuthService{
     private userModel : Model<IUser>;
     private userRepository: DatabaseRepository<IUser>
     private SecurityService: SecurityService
+    private redisService: RedisService
     constructor(){
         this.userModel = userModel;
         this.userRepository = new DatabaseRepository(this.userModel);
         this.SecurityService = new SecurityService;
+        this.redisService = new RedisService;
     }
 
     async signup(data: SignUpDTO) : Promise<IUser> {
@@ -27,22 +30,8 @@ class AuthService{
         if (!userData) {
             throw new BadRequestException("can't create user");
         }
-         
-        let code = createOTP();
-        let hashedOTP = await this.SecurityService.generateHash({plainText:code})
-        await redisService.set({
-            key: `OTP::${userData._id}`,
-            value: hashedOTP,
-            ttl: 5 * 60 // 5 minutes
-        })
-        await sendEmail({
-            to: data.email,
-            subject: "user registerd successfully please verify your email" ,
-            html: `<h1>Hello: ${data.userName}</h1>
-                <p> your otp is: ${code} </p>
-                <p>Note: this otp is valid for 5 minutes</p>
-            `
-        });
+        
+        event.emit("verifyEmail",userData);
         return userData;
     }
 
@@ -74,6 +63,8 @@ class AuthService{
         {returnDocument: 'after'}
     )
 
+    this.redisService.redisDelete(`otp::${user?._id}`);
+
 
     if (!user) { 
         throw new BadRequestException('unexpected error');
@@ -92,7 +83,7 @@ class AuthService{
             throw new UnAuthorizedException("Wrong Password");
         }
 
-        await event.emit("Login",userData);
+        event.emit("Login",userData);
         return userData; 
     }
 }

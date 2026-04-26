@@ -6,3 +6,5 @@ export class SecurityService {
     generateHash = generateHash
     compareHash = compareHash
 }
+
+export const securityService = new SecurityService();

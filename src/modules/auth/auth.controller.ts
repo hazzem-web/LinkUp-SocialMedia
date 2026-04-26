@@ -20,6 +20,11 @@ router.post('/login', valiation(LoginSchema) , async(req: Request,res: Response)
     return SuccessResponse({res, message: "user login successfully", status:200, data}); 
 })
 
+router.put('/verify-email', async(req:Request , res:Response)=>{
+    const data = await AuthService.verifyEmail(req.body);
+    return SuccessResponse({res, message: 'verify email' , status:201 , data});
+})
+
 
 
 export default router ;

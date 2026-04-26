@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { generateHash } from "../security/index";
-import { redisService, SecurityService } from "../../services/index";
+import { redisService, securityService } from "../../services/index";
 import { sendEmail } from "./sendEmail";
 import { IUser } from './../../interfaces/user.interface';
 import { HydratedDocument, Types } from 'mongoose';
@@ -19,8 +19,24 @@ const redisKey = (type: string, identifier: Types.ObjectId | string ): string =>
     return `user::${type}::${identifier}`;
 };
 
-event.on("verifyEmail", async(data: HydratedDocument<IUser>)=>{
+       
 
+event.on("verifyEmail", async(data: HydratedDocument<IUser>)=>{
+     let code = createOTP();
+        let hashedOTP = await securityService.generateHash({plainText:code})
+        await redisService.set({
+            key: `OTP::${data._id}`,
+            value: hashedOTP,
+            ttl: 5 * 60 // 5 minutes
+        })
+        await sendEmail({
+            to: data.email,
+            subject: "user registerd successfully please verify your email" ,
+            html: `<h1>Hello: ${data.userName}</h1>
+                <p> your otp is: ${code} </p>
+                <p>Note: this otp is valid for 5 minutes</p>
+            `
+        }); 
 })
 
 

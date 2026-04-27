@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { env } from './../../config/env.service';
 import { UnAuthorizedException } from '../exceptions';
 import { v4 as uuidv4 } from 'uuid';
@@ -55,41 +55,41 @@ export class TokenService {
     return { accessToken, refreshToken } ;
   };
 
-//   decodeToken = (token) => {
-//     let decoded = jwt.decode(token);
-//     if (!decoded) {
-//       return new UnAuthorizedException("un Authorized");
-//     }
-//     let signature = undefined;
-//     switch (decoded.aud) {
-//       case "Admin":
-//         signature = env.JwtAdminSignature;
-//         break;
+  decodeToken = (token: string) => {
+    let decoded = jwt.decode(token) as JwtPayload;
+    if (!decoded) {
+      return new UnAuthorizedException("un Authorized");
+    }
+    let signature = undefined;
+    switch (decoded.aud) {
+      case "Admin":
+        signature = env.JwtAdminSignature;
+        break;
 
-//       default:
-//         signature = env.JwtUserSignature;
-//         break;
-//     }
-//     let verified = jwt.verify(token, signature);
-//     return verified;
-//   };
+      default:
+        signature = env.JwtUserSignature;
+        break;
+    }
+    let verified = jwt.verify(token, signature);
+    return verified;
+  };
 
-//   decodeRefreshToken = (token) => {
-//     let decoded = jwt.decode(token);
-//     if (!decoded) {
-//       return new UnAuthorizedException("un Authorized");
-//     }
-//     let refreshSiganture = undefined;
-//     switch (decoded.aud) {
-//       case "Admin":
-//         refreshSiganture = env.JwtAdminRefreshSignature;
-//         break;
+  decodeRefreshToken = (token:string) => {
+    let decoded = jwt.decode(token) as JwtPayload;
+    if (!decoded) {
+      return new UnAuthorizedException("un Authorized");
+    }
+    let refreshSiganture = undefined;
+    switch (decoded.aud) {
+      case "Admin":
+        refreshSiganture = env.JwtAdminRefreshSignature;
+        break;
 
-//       default:
-//         refreshSiganture = env.JwtUserRefreshSignature;
-//         break;
-//     }
-//     let verified = jwt.verify(token, refreshSiganture);
-//     return verified;
-//   };
+      default:
+        refreshSiganture = env.JwtUserRefreshSignature;
+        break;
+    }
+    let verified = jwt.verify(token, refreshSiganture);
+    return verified;
+  };
 }

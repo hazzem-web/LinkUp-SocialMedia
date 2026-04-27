@@ -55,7 +55,7 @@ export class TokenService {
     return { accessToken, refreshToken } ;
   };
 
-  decodeToken = (token: string) => {
+  decodeToken = (token: string) : JwtPayload | string => {
     let decoded = jwt.decode(token) as JwtPayload;
     if (!decoded) {
       return new UnAuthorizedException("un Authorized");
@@ -74,7 +74,7 @@ export class TokenService {
     return verified;
   };
 
-  decodeRefreshToken = (token:string) => {
+  decodeRefreshToken = (token:string): JwtPayload | string => {
     let decoded = jwt.decode(token) as JwtPayload;
     if (!decoded) {
       return new UnAuthorizedException("un Authorized");

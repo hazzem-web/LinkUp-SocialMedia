@@ -8,17 +8,21 @@ import { SecurityService } from './../../common/services/security.service';
 import { createOTP, event , sendEmail } from "../../common/utils/email/index";
 import { redisService } from "../../common/services";
 import { RedisService } from './../../common/services/redis.service';
+import { TokenService } from './../../common/services/token.service';
+import { ProviderEnum } from "../../common/enums";
 
 class AuthService{
     private userModel : Model<IUser>;
     private userRepository: DatabaseRepository<IUser>
     private SecurityService: SecurityService
     private redisService: RedisService
+    private tokenService: TokenService
     constructor(){
         this.userModel = userModel;
         this.userRepository = new DatabaseRepository(this.userModel);
         this.SecurityService = new SecurityService;
         this.redisService = new RedisService;
+        this.tokenService = new TokenService;
     }
 
     async signup(data: SignUpDTO) : Promise<IUser> {
@@ -73,18 +77,19 @@ class AuthService{
     return {user}
 }
 
-    async login(data: LoginDTO) : Promise<HydratedDocument<IUser> | null> {
-        let userData = await this.userRepository.findOne({ email: data.email}, "-__v");
+    async login(data: LoginDTO) {
+        let {email,password} = data;
+        let userData = await this.userRepository.findOne({ email , provider: ProviderEnum.System}, "-__v");
         if (!userData) { 
             throw new NotFoundException("User Not Found");
         }
-        let matched = await this.SecurityService.compareHash({plainText: data.password , cypherText: userData.password});
+        let matched = await this.SecurityService.compareHash({plainText: password , cypherText: userData.password});
         if (!matched) { 
             throw new UnAuthorizedException("Wrong Password");
         }
-
+        let {accessToken, refreshToken} = await this.tokenService.generateToken(userData)
         event.emit("Login",userData);
-        return userData; 
+        return {userData , accessToken, refreshToken}
     }
 }
 

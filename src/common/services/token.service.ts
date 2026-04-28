@@ -93,3 +93,6 @@ export class TokenService {
     return verified;
   };
 }
+
+
+export const tokenService = new TokenService();

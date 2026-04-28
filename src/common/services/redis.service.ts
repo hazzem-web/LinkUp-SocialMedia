@@ -87,7 +87,7 @@ export class RedisService {
     return data;
   };
 
-  generateRevokeKey = ({ userId, jti } :{userId: Types.ObjectId , jti:string }) : string => {
+  generateRevokeKey = ({ userId, jti } :{userId: Types.ObjectId , jti:string|undefined }) : string => {
     return `revokeToken::${userId}::${jti}`;
   };
 }

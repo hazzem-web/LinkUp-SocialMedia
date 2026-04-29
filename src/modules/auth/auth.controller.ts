@@ -5,6 +5,7 @@ import AuthService from './auth.service';
 import { SuccessResponse } from '../../common/exceptions/success.response';
 import { LoginSchema, SignUpSchema } from './auth.validation';
 import { valiation } from '../../middleware/validation.middleware';
+import { auth } from '../../middleware/auth.middlewate';
 
 
 const router: Router = Router()
@@ -26,5 +27,14 @@ router.put('/verify-email', async(req:Request , res:Response)=>{
 })
 
 
+router.get('/test', auth , async(req:Request , res:Response)=>{
+    res.json({message: 'test'})
+})
 
-export default router ;
+
+router.post('/signup/gmail', async (req,res)=>{
+    const data = await AuthService.signupGoogle(req.body);
+    return SuccessResponse({res, message: 'user signup successfully', status:200, data});
+})
+
+export default router ; 

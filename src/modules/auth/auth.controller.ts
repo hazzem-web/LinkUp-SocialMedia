@@ -5,7 +5,7 @@ import AuthService from './auth.service';
 import { SuccessResponse } from '../../common/exceptions/success.response';
 import { LoginSchema, SignUpSchema } from './auth.validation';
 import { valiation } from '../../middleware/validation.middleware';
-import { auth } from '../../middleware/auth.middlewate';
+import { auth } from '../../middleware/auth.middleware';
 
 
 const router: Router = Router()

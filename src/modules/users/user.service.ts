@@ -20,6 +20,17 @@ import { NotFoundException, UnAuthorizedException } from "../../common/exception
         }
         return userData;
     }
+
+    async updateProfile(userId:string) {
+        if (!userId) { 
+            throw new UnAuthorizedException("user id not found");
+        }
+        let userData = await this.userRepository.findById(userId);
+        if (!userData) { 
+            throw new NotFoundException("User Not Found");
+        }
+        
+    }
 }
 
 

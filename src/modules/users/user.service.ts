@@ -14,7 +14,7 @@ import { NotFoundException, UnAuthorizedException } from "../../common/exception
         if (!userId) { 
             throw new UnAuthorizedException("user id not found");
         }
-        let userData = await this.userRepository.findById(userId).select("-password");
+        let userData = await this.userRepository.findById(userId , "-password")
         if (!userData) { 
             throw new NotFoundException("User Not Found");
         }

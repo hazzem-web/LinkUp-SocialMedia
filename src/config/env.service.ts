@@ -20,6 +20,13 @@ const BASE_URL = `${process.env.BASE_DOMAIN}${Port}` as string;
 const AppEmail = process.env.APP_EMAIL as string;
 const AppPassword = process.env.APP_PASSWORD as string;
 
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME as string
+const AWS_REGION = process.env.AWS_REGION as string
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID as string
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY as string
+
+const AWS_EXPIRATION_TIME = process.env.AWS_EXPIRATION_TIME as string
+
 export const env = {
     mongoURI,
     REDIS_URI ,
@@ -34,5 +41,10 @@ export const env = {
     JwtUserRefreshSignature , 
     BASE_URL , 
     AppEmail , 
-    AppPassword
+    AppPassword,
+    AWS_BUCKET_NAME,
+    AWS_REGION,
+    AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY,
+    AWS_EXPIRATION_TIME
 }

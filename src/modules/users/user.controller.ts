@@ -13,7 +13,7 @@ router.get('/get-user-profile', auth ,async (req:Request,res:Response)=>{
     return SuccessResponse({res, message: "user data retrieved successfully", status: 200, data:userData});
 })
 
-router.patch('/update-profile', auth , uploadFile({storageKey:MulterEnum.memoryStorage}).single("file") ,async(req:Request, res:Response)=>{
+router.patch('/update-profile', auth , uploadFile({storageKey:MulterEnum.diskStorage}).single("file") ,async(req:Request, res:Response)=>{
     console.log(req.file);
     let userData = await userService.updateProfile(req.userId as string);
     return SuccessResponse({res, message: "user updated successfully", status: 200, data: userData});  

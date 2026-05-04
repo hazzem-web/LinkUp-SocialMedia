@@ -1,5 +1,7 @@
 import { ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { env } from "../../config/env.service";
+import { MulterEnum } from "../enums/multer.enum";
+import { createReadStream } from "node:fs";
 export class S3Service { 
     private client: S3Client;
 
@@ -14,12 +16,14 @@ export class S3Service {
     }
 
     async uploadAsset({
+        storageKey = MulterEnum.diskStorage,
         Bucket = env.AWS_BUCKET_NAME,
         path = 'general',
         file,
         ACL = ObjectCannedACL.private,
         contentType 
     }:{
+        storageKey?:MulterEnum,
         Bucket?: string,
         path?: string,
         file: Express.Multer.File,
@@ -31,7 +35,7 @@ export class S3Service {
             Bucket,
             Key: key,
             ACL,
-            Body: file.buffer,
+            Body: storageKey == MulterEnum.memoryStorage ? file.buffer : createReadStream(file.path),
             ContentType: contentType || file.mimetype
         }))
         return key;

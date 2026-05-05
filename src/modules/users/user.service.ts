@@ -33,7 +33,7 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         }
         
         if (file) { 
-            userData.profilePic = await s3service.uploadAsset({
+            let {Key} = await s3service.uploadBigAsset({
                 storageKey: MulterEnum.diskStorage,
                 path: `${userData._id}/profile-pic`,
                 file

@@ -37,7 +37,11 @@ import { MulterEnum } from "../../common/enums/multer.enum";
                 storageKey: MulterEnum.diskStorage,
                 path: `${userData._id}/profile-pic`,
                 file
-            }) as unknown as string
+            }) 
+            if (!Key) { 
+                throw new NotFoundException("asset key not found");
+            }
+            userData.profilePic = Key as string;
             await userData.save();
         }   
         return userData;

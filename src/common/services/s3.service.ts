@@ -1,4 +1,4 @@
-import { ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CompleteMultipartUploadCommand, CompleteMultipartUploadCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { env } from "../../config/env.service";
 import { MulterEnum } from "../enums/multer.enum";
 import { createReadStream } from "node:fs";
@@ -60,7 +60,7 @@ export class S3Service {
         ACL?: ObjectCannedACL,
         contentType?: string,
         partSize?: number
-    }){
+    }) : Promise<CompleteMultipartUploadCommandOutput>{
         console.log(file, "file data");
         const Key = `linkup/${path}/${Math.round(Math.random() * 1e9)}-${file.originalname}`;
         const result = await new Upload({
@@ -73,7 +73,13 @@ export class S3Service {
             },
             partSize: partSize * 1024 * 1024  // from bit to mb
         })
-        return await result.done;
+
+        result.on("httpUploadProgress", (progress) => {
+            console.log(progress.loaded);
+            console.log(`${(progress.loaded as number) / (progress.total as number) * 100} % Loaded`)
+        })
+
+        return await result.done();
     }  
 
 

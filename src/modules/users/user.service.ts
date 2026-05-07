@@ -23,7 +23,7 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         return userData;
     }
 
-    async updateProfile(userId:string , file?: Express.Multer.File) {
+    async updateProfile(userId:string , file?: Express.Multer.File) : Promise<HydratedDocument<IUser>> {
         if (!userId) { 
             throw new UnAuthorizedException("user id not found");
         }

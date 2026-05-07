@@ -30,7 +30,7 @@ export class S3Service {
         file: Express.Multer.File,
         ACL?: ObjectCannedACL,
         contentType?: string
-    }){
+    }) : Promise<string> {
         const key = `linkup/${path}/${Math.round(Math.random() * 1e9)}-${file.originalname}`;
         const result = await this.client.send(new PutObjectCommand({
             Bucket,

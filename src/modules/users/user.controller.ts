@@ -15,7 +15,13 @@ router.get('/get-user-profile', auth ,async (req:Request,res:Response)=>{
 
 router.patch('/update-profile', auth , uploadFile({storageKey:MulterEnum.diskStorage}).single("file") ,async(req:Request, res:Response)=>{
     console.log(req.file);
-    let userData = await userService.updateProfile(req.userId as string);
+    let userData = await userService.updateProfile(req.userId as string, req.file as Express.Multer.File);
+    return SuccessResponse({res, message: "user updated successfully", status: 200, data: userData});  
+})
+
+router.patch('/update-cover-pic', auth , uploadFile({storageKey:MulterEnum.diskStorage}).array("files") ,async(req:Request, res:Response)=>{
+    console.log(req.file);
+    let userData = await userService.updateCoverPic(req.userId as string, req.files as Express.Multer.File[]);
     return SuccessResponse({res, message: "user updated successfully", status: 200, data: userData});  
 })
 

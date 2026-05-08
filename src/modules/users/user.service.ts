@@ -46,6 +46,26 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         }   
         return userData;
     }
+
+    async updateCoverPic(userId:string , files: Express.Multer.File[]) : Promise<HydratedDocument<IUser>> {
+        if (!userId) { 
+            throw new UnAuthorizedException("user id not found");
+        }
+        let userData = await this.userRepository.findById(userId);
+        if (!userData) { 
+            throw new NotFoundException("User Not Found");
+        }
+
+        if (files.length > 0) { 
+            let {key , result} = await s3service.uploadAssets({
+                path: `${userData._id}/cover-pic`,
+                files
+            })
+            userData.profileCoverPic = result as string[];
+        }
+        await userData.save();
+        return userData;
+ }
 }
 
 

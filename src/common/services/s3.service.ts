@@ -83,6 +83,36 @@ export class S3Service {
     }  
 
 
+    async uploadAssets({
+        storageKey = MulterEnum.diskStorage,
+        Bucket = env.AWS_BUCKET_NAME,
+        path = 'general',
+        files,
+        ACL = ObjectCannedACL.private,
+        contentType,
+        originalname
+    }:{
+        storageKey?: MulterEnum, 
+        Bucket?: string,
+        path?: string,
+        files: Express.Multer.File[],
+        ACL?: ObjectCannedACL,
+        contentType?: string,
+        originalname?: string
+    }) : Promise<{key: string , result: string[]}>{
+        const key = `linkup/${path}/${Math.round(Math.random() * 1e9)}-${originalname}`;
+        const result = await Promise.all(files.map(item => {
+            return this.uploadAsset({
+                storageKey,
+                Bucket,
+                path,
+                file: item,
+                ACL,
+                contentType: item.mimetype
+            })
+        }))
+        return {key , result};
+    }
 
 }
 

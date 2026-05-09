@@ -23,7 +23,13 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         return userData;
     }
 
-    async updateProfile(userId:string , file?: Express.Multer.File) : Promise<HydratedDocument<IUser>> {
+    async saveAndReturnData(userData: HydratedDocument<IUser> , url: string = "") : Promise<{userData: HydratedDocument<IUser> , url: string}>{
+        await userData.save();
+        return {userData ,url};
+    }
+
+    async updateProfile(userId:string ,data: any , file?: Express.Multer.File) : Promise<{userData: HydratedDocument<IUser> , url: string}> {
+        let { phone } = data
         if (!userId) { 
             throw new UnAuthorizedException("user id not found");
         }
@@ -31,20 +37,20 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         if (!userData) { 
             throw new NotFoundException("User Not Found");
         }
-        
         if (file) { 
-            let {Key} = await s3service.uploadBigAsset({
-                storageKey: MulterEnum.diskStorage,
-                path: `${userData._id}/profile-pic`,
-                file
+            let {url,key} = await s3service.createPreSignUrl({
+                path: `${userData._id}/profile-pic`
             }) 
-            if (!Key) { 
+            if (!key) { 
                 throw new NotFoundException("asset key not found");
             }
-            userData.profilePic = Key as string;
-            await userData.save();
-        }   
-        return userData;
+            userData.profilePic = key as string;
+            return await this.saveAndReturnData(userData , url)
+        }
+        else { 
+            userData.phone = phone;
+            return await this.saveAndReturnData(userData)
+        }
     }
 
     async updateCoverPic(userId:string , files: Express.Multer.File[]) : Promise<HydratedDocument<IUser>> {

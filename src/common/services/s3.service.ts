@@ -3,6 +3,8 @@ import { env } from "../../config/env.service";
 import { MulterEnum } from "../enums/multer.enum";
 import { createReadStream } from "node:fs";
 import { Upload } from "@aws-sdk/lib-storage";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { BadRequestException } from "../exceptions";
 export class S3Service { 
     private client: S3Client;
 
@@ -114,6 +116,34 @@ export class S3Service {
         return {key , result};
     }
 
+
+
+    async createPreSignUrl({
+        Bucket = env.AWS_BUCKET_NAME,
+        path = 'general',
+        contentType,
+        originalname
+    }:{
+        Bucket?: string,
+        path?: string,
+        contentType?: string
+        originalname?: string
+    }) : Promise<{url: string , key: string}> {
+        const key = `linkup/${path}/${Math.round(Math.random() * 1e9)}-${originalname}`;
+        const result = new PutObjectCommand({
+            Bucket,
+            Key: key,
+            ContentType: contentType
+        })
+
+        const url = await getSignedUrl(this.client, result, {expiresIn: 60 *2});
+        if (!url) { 
+            throw new BadRequestException("can't create file url");
+        }
+        
+        return {url , key};   
+    }
+
 }
 
-export const s3service = new S3Service();
+export const s3service = new S3Service(); 

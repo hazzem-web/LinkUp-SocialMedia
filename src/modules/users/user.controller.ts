@@ -15,7 +15,7 @@ router.get('/get-user-profile', auth ,async (req:Request,res:Response)=>{
 
 router.patch('/update-profile', auth , uploadFile({storageKey:MulterEnum.diskStorage}).single("file") ,async(req:Request, res:Response)=>{
     console.log(req.file);
-    let userData = await userService.updateProfile(req.userId as string, req.file as Express.Multer.File);
+    let userData = await userService.updateProfile(req.userId as string, req.body ,req.file as Express.Multer.File);
     return SuccessResponse({res, message: "user updated successfully", status: 200, data: userData});  
 })
 

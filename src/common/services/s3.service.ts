@@ -1,4 +1,4 @@
-import { CompleteMultipartUploadCommand, CompleteMultipartUploadCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CompleteMultipartUploadCommand, CompleteMultipartUploadCommandOutput, GetObjectCommand, GetObjectCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { env } from "../../config/env.service";
 import { MulterEnum } from "../enums/multer.enum";
 import { createReadStream } from "node:fs";
@@ -142,6 +142,21 @@ export class S3Service {
         }
         
         return {url , key};   
+    }
+
+
+    async getAsset({
+        Bucket = env.AWS_BUCKET_NAME,
+        Key
+    }:{
+        Bucket?: string
+        Key: string,
+    }) : Promise<GetObjectCommandOutput> {
+        const result = new GetObjectCommand({
+            Bucket,
+            Key
+        })
+        return this.client.send(result);
     }
 
 }

@@ -12,6 +12,12 @@ import { databaseConnection } from './database/connection';
 import { redisService } from './common/services/redis.service';
 import { Server } from 'socket.io';
 import { BadRequestException, SuccessResponse } from './common/exceptions';
+
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
+import { s3service } from './common/services';
+const s3GetFile = promisify(pipeline);
+
 let origin = env.BASE_URL;
 let allowedOrigins = [...origin];
 
@@ -32,12 +38,14 @@ export const boostrap = async()=>{
     
     redisService.connect();
 
-    app.get('/uploads/*path', (req:Request,res:Response)=>{
+    app.get('/uploads/*path', async(req:Request,res:Response)=>{
         let { path } = req.params as { path: string[] };
         if (path.length == 0) { 
             throw new BadRequestException("Path Not Found");
         }
         let key = path.join('/');
+        let { Body , ContentType } = await s3service.getAsset({Key:key});
+        s3GetFile(Body as NodeJS.ReadableStream, res);
         return SuccessResponse({res, message: "user profile data", data: key});
     })
 

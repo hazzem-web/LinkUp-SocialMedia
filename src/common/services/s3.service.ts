@@ -1,4 +1,4 @@
-import { CompleteMultipartUploadCommand, CompleteMultipartUploadCommandOutput, GetObjectCommand, GetObjectCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CompleteMultipartUploadCommandOutput, GetObjectCommand, GetObjectCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { env } from "../../config/env.service";
 import { MulterEnum } from "../enums/multer.enum";
 import { createReadStream } from "node:fs";

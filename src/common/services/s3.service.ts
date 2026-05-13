@@ -1,4 +1,4 @@
-import { CompleteMultipartUploadCommandOutput, GetObjectCommand, GetObjectCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CompleteMultipartUploadCommandOutput, DeleteObjectCommand, DeleteObjectCommandOutput, GetObjectCommand, GetObjectCommandOutput, ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { env } from "../../config/env.service";
 import { MulterEnum } from "../enums/multer.enum";
 import { createReadStream } from "node:fs";
@@ -159,6 +159,20 @@ export class S3Service {
         return this.client.send(result);
     }
 
+
+    async deleteAsset({
+        Bucket = env.AWS_BUCKET_NAME,
+        Key
+    }:{
+        Bucket?: string
+        Key: string,
+    }) : Promise <DeleteObjectCommandOutput> {
+        const result = new DeleteObjectCommand({
+            Bucket,
+            Key
+        })
+        return this.client.send(result);
+    }
 }
 
 export const s3service = new S3Service(); 

@@ -37,6 +37,11 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         if (!userData) { 
             throw new NotFoundException("User Not Found");
         }
+        if (userData.profilePic) { 
+            await s3service.deleteAsset({
+                Key: userData.profilePic
+            });
+        }
         if (file) { 
             let {url,key} = await s3service.createPreSignUrl({
                 path: `${userData._id}/profile-pic`

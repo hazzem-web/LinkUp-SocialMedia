@@ -59,6 +59,19 @@ export const boostrap = async()=>{
         return SuccessResponse({res, message: "user profile data", data: key});
     })
 
+    app.get('/presign/*path', async(req:Request,res:Response)=>{
+        let { download , fileName } = req.query as {download: string , fileName: string} ;
+        let { path } = req.params as { path: string[] };
+        if (path.length == 0) { 
+            throw new BadRequestException("Path Not Found");
+        }
+        let key = path.join('/');
+        let url = await s3service.createPresignFetchURL({key , fileName , download});
+        return SuccessResponse({res, message: "Presigned Url", data: url});
+    })
+
+    
+
     app.use('/auth', authRouter);
     app.use('/users', userRouter);
     app.use('/messages', messageRouter);

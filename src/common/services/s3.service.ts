@@ -173,6 +173,27 @@ export class S3Service {
         })
         return this.client.send(result);
     }
+
+
+    async createPresignFetchURL({
+        Bucket = env.AWS_BUCKET_NAME,
+        key,
+        fileName,
+        download
+    }:{
+        Bucket?: string ,
+        key: string,
+        fileName?: string,
+        download?: string
+    }) : Promise<string> {
+        const result = new GetObjectCommand({
+            Bucket,
+            Key: key,
+            ResponseContentDisposition: download == "true" ? `attachment; filename="${fileName || key.split("/").pop()}"` : undefined
+        })
+        const url = await getSignedUrl(this.client, result , {expiresIn: 60 * 2});
+        return url;
+    }
 }
 
 export const s3service = new S3Service(); 

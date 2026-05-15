@@ -77,6 +77,19 @@ import { MulterEnum } from "../../common/enums/multer.enum";
         await userData.save();
         return userData;
  }
+
+    async sendNotification(userId:string , token:string){
+        let userData = await this.userRepository.findByIdAndUpdate(
+            userId,
+            {
+                $addToSet: {
+                    tokens: token
+                }
+            }
+        )
+
+        return userData;
+    }
 }
 
 

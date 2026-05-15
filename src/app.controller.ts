@@ -25,15 +25,16 @@ export const boostrap = async()=>{
     const app: Express = express();
     app.use(express.json());
     app.use(express.urlencoded({extended: false}))
-    app.use(cors({
-        origin: function(origin, callback){
-            if (!origin || allowedOrigins.includes(origin)) { 
-                return callback(null , true)
-            }
-            return callback(new Error("this origin is not allowed to send request (unauthorized)"))
-        },
-        credentials: true
-    }));
+    // app.use(cors({
+    //     origin: function(origin, callback){
+    //         if (!origin || allowedOrigins.includes(origin)) { 
+    //             return callback(null , true)
+    //         }
+    //         return callback(new Error("this origin is not allowed to send request (unauthorized)"))
+    //     },
+    //     credentials: true
+    // }));
+    app.use(cors());
     await databaseConnection();
     
     redisService.connect();

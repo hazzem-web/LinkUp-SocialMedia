@@ -55,7 +55,10 @@ const userSchema = new mongoose.Schema<IUser>({
     twoFA: {
         type: Boolean,
         default: false
-    }
+    },
+    tokens: [{
+        type: String
+    }]
 },{
     timestamps: true,
     toObject:{

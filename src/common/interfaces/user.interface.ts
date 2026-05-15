@@ -14,6 +14,7 @@ export interface IUser  {
     role?: RoleEnum,
     provider?: ProviderEnum,
     twoFA: boolean,
+    tokens?: string[] 
     createdAt?: Date,
     updatedAt?: Date
 }

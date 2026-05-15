@@ -1,4 +1,4 @@
-import { Router , Request , Response } from 'express';
+import { Router , Request , Response, NextFunction } from 'express';
 import { userService } from './user.service';
 import { auth } from '../../middleware/auth.middleware';
 import { NotFoundException, SuccessResponse } from '../../common/exceptions';
@@ -23,6 +23,12 @@ router.patch('/update-cover-pic', auth , uploadFile({storageKey:MulterEnum.diskS
     console.log(req.file);
     let userData = await userService.updateCoverPic(req.userId as string, req.files as Express.Multer.File[]);
     return SuccessResponse({res, message: "user updated successfully", status: 200, data: userData});  
+})
+
+
+router.post('/notification', auth ,async(req:Request, res:Response)=>{
+    let userData = await userService.sendNotification(req.userId! as string , req.body.token as string);
+    return SuccessResponse({res, message: "notification recieved successfully", status: 200 , data: userData});
 })
 
 export default router ; 

@@ -3,7 +3,7 @@ import { IUser } from "../../common/interfaces";
 import { userModel } from "../../database/models";
 import { DatabaseRepository } from "../../database/repository/base.repository";
 import { NotFoundException, UnAuthorizedException } from "../../common/exceptions";
-import { s3service } from "../../common/services";
+import { s3service, sendNotificationFirebase } from "../../common/services";
 import { MulterEnum } from "../../common/enums/multer.enum";
 
  export class UserService {
@@ -87,7 +87,10 @@ import { MulterEnum } from "../../common/enums/multer.enum";
                 }
             }
         )
-
+        const notification = await sendNotificationFirebase(userId , {
+            title: "Notification",
+            body: "Hello Hazzem"
+        })
         return userData;
     }
 }

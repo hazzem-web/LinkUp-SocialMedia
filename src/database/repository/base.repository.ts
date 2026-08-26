@@ -121,7 +121,7 @@ export class DatabaseRepository<TRawDocs> {
         this.IdValidation(id);
         let doc = this.model.findById(id,null,options);
         if (select) {
-            doc.select(select);
+            doc = doc.select(select);
         }
         return await doc;
     }
